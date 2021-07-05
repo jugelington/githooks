@@ -1,14 +1,16 @@
 #!/bin/sh
 
-# This hook will add changed directories to the commit message
+# This hook will add changed directories to the commit message.
+# All lower case characters are removed, so directories without upper case characters will not be added.
 
 COMMIT_MSG_FILE=$1
 
-STAGED_DIRECTORIES=$(git diff --name-only --staged | xargs -L1 dirname | cut -d "/" -f1 | uniq)
+STAGED_DIRECTORIES=$(git diff --name-only --staged | xargs -L1 dirname | cut -d "/" -f1 | uniq | tr '\n' '|')
 
-STRING="$STAGED_DIRECTORIES\n$(cat $COMMIT_MSG_FILE)"
 BASE_DIR=$(basename "`pwd`")
 
-STRING=$(sed 's/\./'"$BASE_DIR"'/g' <<< $STAGED_DIRECTORIES)
+STAGED_DIRECTORIES=$(sed 's/\./'"$BASE_DIR"'/g' <<< $STAGED_DIRECTORIES)
+STAGED_DIRECTORIES=$(sed 's/[a-z]//g' <<< $STAGED_DIRECTORIES)
+STAGED_DIRECTORIES=$(sed 's/.$//' <<< $STAGED_DIRECTORIES)
 
-echo -e $STRING > $COMMIT_MSG_FILE
+echo -e "[$STAGED_DIRECTORIES]" > $COMMIT_MSG_FILE

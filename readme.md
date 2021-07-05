@@ -10,8 +10,8 @@ Copy the hook you want to use to the `.git/hooks/` directory in the repo you wan
 ## prepare-commit-message
 
 
-Finds all unique directories with staged files in them, and adds them to the commit message.
+Finds all unique directories with staged files in them, and adds them to the commit message, in a formatted manner.
 
-### TODO
 
-- Automate abbreviating directory names in the message - balance of unique, concise & legible.
+For examples, if files in directories called `Foo`, `Bar`, and `FooBar` have been changed, the commit message will start `[F|B|FB]`
+
