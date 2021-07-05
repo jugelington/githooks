@@ -1,0 +1,16 @@
+#!/bin/sh
+
+COMMIT_MSG_FILE=$1
+COMMIT_SOURCE=$2
+SHA1=$3
+
+STAGED_DIRECTORIES=$(git diff --name-only --staged | xargs -L1 dirname | cut -d "/" -f1 | uniq)
+
+STRING="$STAGED_DIRECTORIES\n$(cat $COMMIT_MSG_FILE)"
+BASE_DIR=$(basename "`pwd`")
+
+echo $BASE_DIR
+
+STRING=$(sed 's/\./'"$BASE_DIR"'/g' <<< $STAGED_DIRECTORIES)
+
+echo -e $STRING > $COMMIT_MSG_FILE
